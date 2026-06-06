@@ -185,3 +185,23 @@ function calculateResult() {
 function updateResult() {
   document.getElementById("result").value = currentExpression || "0";
 }
+
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = {
+    get LAST_RESULT() { return LAST_RESULT; },
+    set LAST_RESULT(v) { LAST_RESULT = v; },
+    get currentExpression() { return currentExpression; },
+    set currentExpression(v) { currentExpression = v; },
+    appendToResult,
+    bracketToResult,
+    backspace,
+    operatorToResult,
+    clearResult,
+    normalizeExpression,
+    percentToResult,
+    calculateExpression,
+    calculateResult,
+    updateResult,
+    toggleTheme,
+  };
+}
