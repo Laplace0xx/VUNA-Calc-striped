@@ -46,12 +46,6 @@ window.addEventListener("DOMContentLoaded", function () {
 // ------------------------------
 // Calculator State
 // ------------------------------
-let left = "";
-let operator = "";
-let right = "";
-let steps = [];
-const MAX_STEPS = 6;
-
 // ------------------------------
 // Basic Calculator Functions
 // ------------------------------
@@ -100,31 +94,39 @@ function normalizeExpression(expr) {
 }
 
 function percentToResult() {
-  if (!currentExpression) return;
+  if (!currentExpression) {
+    return;
+  }
 
   const match = currentExpression.match(/(.+?)(\*\*|[+\-*/^])([0-9.]*)$/);
 
   if (!match) {
     const num = parseFloat(currentExpression);
-    if (isNaN(num)) return;
+    if (isNaN(num)) {
+      return;
+    }
 
     currentExpression = (num / 100).toString();
   } else {
     const leftPart = match[1];
     const rightPart = match[3];
 
-    if (!rightPart) return;
+    if (!rightPart) {
+      return;
+    }
 
     let leftVal;
 
     try {
-      leftVal = eval(leftPart);
-    } catch (e) {
+      leftVal = eval(leftPart); // eslint-disable-line no-eval
+    } catch {
       leftVal = parseFloat(leftPart);
     }
 
     const rightVal = parseFloat(rightPart);
-    if (isNaN(leftVal) || isNaN(rightVal)) return;
+    if (isNaN(leftVal) || isNaN(rightVal)) {
+      return;
+    }
 
     const percentVal = (leftVal * rightVal) / 100;
 
@@ -142,7 +144,6 @@ function percentToResult() {
 // ------------------------------
 function calculateExpression(expression) {
   try {
-   
     let normalizedExpression = normalizeExpression(expression);
 
     // 🧠 Replace "ans" with last result automatically
@@ -152,21 +153,23 @@ function calculateExpression(expression) {
     );
 
     // Calculate result
-    let result = eval(normalizedExpression);
+    let result = eval(normalizedExpression); // eslint-disable-line no-eval
     console.log("Calculated result for expression:", expression, "->", result);
- 
+
     if (isNaN(result) || !isFinite(result)) {
       throw new Error();
     }
 
     return result;
-  } catch (e) {
+  } catch {
     return "Error";
   }
 }
 function calculateResult() {
-  if (!currentExpression) return;
-    const display = document.getElementById("result"); 
+  if (!currentExpression) {
+    return;
+  }
+    const display = document.getElementById("result");
     // Calculate result
     let result = calculateExpression(currentExpression);
     result = String(result);
