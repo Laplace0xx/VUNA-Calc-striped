@@ -801,3 +801,191 @@
  
   /* error state */
   .adc-error { color: #dc3545; font-size: .85rem; margin-top: 6px; display: none; }
+
+  .graph-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: rgba(15, 23, 42, 0.72);
+    padding: 20px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .graph-modal.open {
+    display: flex;
+  }
+
+  .graph-modal-content {
+    width: min(720px, 100%);
+    background: #ffffff;
+    border-radius: 24px;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.28);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+  }
+
+  .graph-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e9ecef;
+  }
+
+  .graph-modal-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #212529;
+  }
+
+  .graph-modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+  }
+
+  .graph-modal-close:hover {
+    color: #212529;
+  }
+
+  .graph-modal-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow-y: auto;
+  }
+
+  .graph-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .graph-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .graph-input-group label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .graph-input-group input {
+    padding: 10px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 12px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .graph-input-group input:focus {
+    border-color: #0d6efd;
+  }
+
+  .graph-input-row {
+    display: flex;
+    gap: 12px;
+  }
+
+  .graph-input-row .graph-input-group {
+    flex: 1;
+  }
+
+  .btn-graph-plot {
+    background: #0d6efd;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .btn-graph-plot:hover {
+    background: #0b5ed7;
+  }
+
+  .graph-canvas-wrap {
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e9ecef;
+  }
+
+  #graph-canvas {
+    width: 100%;
+    height: 300px;
+    display: block;
+    background: #ffffff;
+  }
+
+  body.dark-mode .graph-modal-content {
+    background: #2d2d2d;
+  }
+
+  body.dark-mode .graph-modal-header {
+    border-bottom-color: #444444;
+  }
+
+  body.dark-mode .graph-modal-title {
+    color: #e0e0e0;
+  }
+
+  body.dark-mode .graph-modal-close {
+    color: #888888;
+  }
+
+  body.dark-mode .graph-modal-close:hover {
+    color: #e0e0e0;
+  }
+
+  body.dark-mode .graph-input-group label {
+    color: #888888;
+  }
+
+  body.dark-mode .graph-input-group input {
+    background: #444444;
+    color: #e0e0e0;
+    border-color: #555555;
+  }
+
+  body.dark-mode .graph-input-group input:focus {
+    border-color: #0d6efd;
+  }
+
+  body.dark-mode .graph-canvas-wrap {
+    background: #2d2d2d;
+    border-color: #444444;
+  }
+
+  body.dark-mode #graph-canvas {
+    background: #2d2d2d;
+  }
+
+  .btn-graph {
+    background: #6c757d;
+    color: white;
+    font-size: 14px;
+  }
+
+  .btn-graph:hover {
+    background: #5c636a;
+    color: white;
+  }

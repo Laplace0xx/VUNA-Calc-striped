@@ -189,6 +189,183 @@ function updateResult() {
   document.getElementById("result").value = currentExpression || "0";
 }
 
+// ------------------------------
+// Graph Plotting
+// ------------------------------
+function plotGraph() {
+  const modal = document.getElementById("graph-modal");
+  if (modal) {
+    modal.classList.add("open");
+    drawGraph();
+  }
+}
+
+function closeGraphModal() {
+  const modal = document.getElementById("graph-modal");
+  if (modal) {
+    modal.classList.remove("open");
+  }
+}
+
+function drawGraph() {
+  const equationInput = document.getElementById("graph-equation");
+  const xMinInput = document.getElementById("graph-xmin");
+  const xMaxInput = document.getElementById("graph-xmax");
+  const canvas = document.getElementById("graph-canvas");
+
+  if (!equationInput || !canvas) {
+    return;
+  }
+
+  const expr = equationInput.value.trim();
+  if (!expr) {
+    return;
+  }
+
+  const xMin = parseFloat(xMinInput.value) || -10;
+  const xMax = parseFloat(xMaxInput.value) || 10;
+  if (xMin >= xMax) {
+    return;
+  }
+
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth || 600;
+  const h = canvas.clientHeight || 300;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+
+  const padding = { top: 20, right: 20, bottom: 30, left: 40 };
+  const plotW = w - padding.left - padding.right;
+  const plotH = h - padding.top - padding.bottom;
+  const yMin = -10;
+  const yMax = 10;
+
+  function xToPixel(x) {
+    return padding.left + ((x - xMin) / (xMax - xMin)) * plotW;
+  }
+
+  function yToPixel(y) {
+    return padding.top + plotH - ((y - yMin) / (yMax - yMin)) * plotH;
+  }
+
+  const isDark = document.body.classList.contains("dark-mode");
+  const bgColor = isDark ? "#2d2d2d" : "#ffffff";
+  const gridColor = isDark ? "#444444" : "#e9ecef";
+  const axisColor = isDark ? "#888888" : "#495057";
+  const curveColor = "#0d6efd";
+  const textColor = isDark ? "#cccccc" : "#495057";
+
+  ctx.fillStyle = bgColor;
+  ctx.fillRect(0, 0, w, h);
+
+  // draw grid
+  ctx.strokeStyle = gridColor;
+  ctx.lineWidth = 0.5;
+  for (let x = Math.ceil(xMin); x <= xMax; x++) {
+    if (x === 0) {
+      continue;
+    }
+    const px = xToPixel(x);
+    ctx.beginPath();
+    ctx.moveTo(px, padding.top);
+    ctx.lineTo(px, h - padding.bottom);
+    ctx.stroke();
+  }
+  for (let y = Math.ceil(yMin); y <= yMax; y++) {
+    if (y === 0) {
+      continue;
+    }
+    const py = yToPixel(y);
+    ctx.beginPath();
+    ctx.moveTo(padding.left, py);
+    ctx.lineTo(w - padding.right, py);
+    ctx.stroke();
+  }
+
+  // draw axes
+  ctx.strokeStyle = axisColor;
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  const xAxisY = yToPixel(0);
+  ctx.moveTo(padding.left, xAxisY);
+  ctx.lineTo(w - padding.right, xAxisY);
+  ctx.stroke();
+  const yAxisX = xToPixel(0);
+  ctx.beginPath();
+  ctx.moveTo(yAxisX, padding.top);
+  ctx.lineTo(yAxisX, h - padding.bottom);
+  ctx.stroke();
+
+  // tick labels
+  ctx.fillStyle = textColor;
+  ctx.font = "10px sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  for (let x = Math.ceil(xMin); x <= xMax; x++) {
+    if (x === 0) {
+      continue;
+    }
+    const px = xToPixel(x);
+    ctx.fillText(x.toString(), px, xAxisY + 4);
+  }
+  ctx.textAlign = "right";
+  ctx.textBaseline = "middle";
+  for (let y = Math.ceil(yMin); y <= yMax; y++) {
+    if (y === 0) {
+      continue;
+    }
+    const py = yToPixel(y);
+    ctx.fillText(y.toString(), yAxisX - 6, py);
+  }
+
+  // draw curve
+  ctx.strokeStyle = curveColor;
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+
+  const steps = plotW * 2;
+  let first = true;
+
+  for (let i = 0; i <= steps; i++) {
+    const x = xMin + ((xMax - xMin) * i) / steps;
+    let normalized = expr.toLowerCase()
+      .replace(/(\d)x/g, '$1*x')
+      .replace(/x/g, `(${x})`);
+    normalized = normalizeExpression(normalized);
+    let y;
+    try {
+      y = eval(normalized); // eslint-disable-line no-eval
+    } catch {
+      y = NaN;
+    }
+
+    if (isNaN(y) || !isFinite(y)) {
+      first = true;
+      continue;
+    }
+
+    if (y < yMin - 5 || y > yMax + 5) {
+      first = true;
+      continue;
+    }
+
+    const px = xToPixel(x);
+    const py = yToPixel(y);
+
+    if (first) {
+      ctx.moveTo(px, py);
+      first = false;
+    } else {
+      ctx.lineTo(px, py);
+    }
+  }
+
+  ctx.stroke();
+}
+
 if (typeof module !== "undefined" && module.exports) {
   module.exports = {
     get LAST_RESULT() { return LAST_RESULT; },
@@ -206,5 +383,8 @@ if (typeof module !== "undefined" && module.exports) {
     calculateResult,
     updateResult,
     toggleTheme,
+    plotGraph,
+    closeGraphModal,
+    drawGraph,
   };
 }

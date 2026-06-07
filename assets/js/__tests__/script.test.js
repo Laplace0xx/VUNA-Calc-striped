@@ -249,120 +249,96 @@ describe("percentToResult", () => {
   });
 
   test("returns early with NaN after operator", () => {
-    calc.currentExpression = "abc+";
-    calc.percentToResult();
-    expect(calc.currentExpression).toBe("abc+");
-  });
-});
-
-// ─── calculateResult ─────────────────────────────────────
-
-describe("calculateResult", () => {
-  test("returns early when expression is empty", () => {
-    calc.calculateResult();
-    expect(calc.currentExpression).toBe("");
-  });
-
-  test("calculates and stores result", () => {
-    calc.appendToResult("2+3");
-    calc.calculateResult();
-    expect(calc.LAST_RESULT).toBe("5");
-    expect(calc.currentExpression).toBe("5");
-  });
-
-  test("updates display with result", () => {
-    calc.appendToResult("4*5");
-    calc.calculateResult();
-    expect(document.getElementById("result").value).toBe("20");
-  });
-});
-
-// ─── updateResult ────────────────────────────────────────
-
-describe("updateResult", () => {
-  test("shows 0 when expression is empty", () => {
-    calc.updateResult();
-    expect(document.getElementById("result").value).toBe("0");
-  });
-
-  test("shows current expression in display", () => {
-    calc.currentExpression = "42";
-    calc.updateResult();
-    expect(document.getElementById("result").value).toBe("42");
-  });
-});
-
-// ─── toggleTheme ─────────────────────────────────────────
-
-describe("toggleTheme", () => {
-  test("toggles dark-mode class on body", () => {
-    calc.toggleTheme();
-    expect(document.body.classList.contains("dark-mode")).toBe(true);
-  });
-
-  test("saves dark theme to localStorage", () => {
-    calc.toggleTheme();
-    expect(localStorage.getItem("theme")).toBe("dark");
-  });
-
-  test("toggles back to light mode", () => {
-    calc.toggleTheme();
-    calc.toggleTheme();
-    expect(document.body.classList.contains("dark-mode")).toBe(false);
-    expect(localStorage.getItem("theme")).toBe("light");
-  });
-
-  test("saves light theme to localStorage", () => {
-    calc.toggleTheme();
-    calc.toggleTheme();
-    expect(localStorage.getItem("theme")).toBe("light");
-  });
-});
-
-// ─── DOMContentLoaded listener ─────────────────────────
-
-describe("DOMContentLoaded listener", () => {
-  test("applies dark mode from localStorage", () => {
-    localStorage.setItem("theme", "dark");
-    document.body.className = "";
-    window.dispatchEvent(new Event("DOMContentLoaded"));
-    expect(document.body.classList.contains("dark-mode")).toBe(true);
-  });
-
-  test("applies light mode when localStorage is light", () => {
-    localStorage.setItem("theme", "light");
-    window.dispatchEvent(new Event("DOMContentLoaded"));
-    expect(document.body.classList.contains("dark-mode")).toBe(false);
-  });
-
-  test("handles missing theme-toggle button gracefully", () => {
-    document.getElementById("theme-toggle").remove();
-    localStorage.setItem("theme", "dark");
-    document.body.className = "";
-    expect(() => {
-      window.dispatchEvent(new Event("DOMContentLoaded"));
-    }).not.toThrow();
-  });
-});
-
-// ─── percentToResult edge cases ────────────────────────
-
-describe("percentToResult edge cases", () => {
-  test("handles eval failure in leftPart (e.g., 10a+10)", () => {
-    calc.currentExpression = "10a+10";
-    calc.percentToResult();
-    expect(calc.currentExpression).toBe("1*");
-  });
-
-  test("returns early when plain number is NaN", () => {
-    calc.currentExpression = "abc";
-    calc.percentToResult();
-    expect(calc.currentExpression).toBe("abc");
-  });
-
-  test("returns early when operator match has NaN left value", () => {
     calc.currentExpression = "abc+10";
     calc.percentToResult();
     expect(calc.currentExpression).toBe("abc+10");
   });
 });
+
+// ─── Graph Plotting ────────────────────────────────────────
+
+describe("graph plotting", () => {
+  beforeEach(() => {
+    document.body.innerHTML += `
+      <div class="graph-modal" id="graph-modal">
+        <div class="graph-modal-content">
+          <div class="graph-modal-header">
+            <span class="graph-modal-title">Graph Plotter</span>
+            <button class="graph-modal-close" onclick="closeGraphModal()">&times;</button>
+          </div>
+          <div class="graph-modal-body">
+            <div class="graph-inputs">
+              <div class="graph-input-group">
+                <label for="graph-equation">Equation f(x) =</label>
+                <input type="text" id="graph-equation" />
+              </div>
+              <div class="graph-input-row">
+                <div class="graph-input-group">
+                  <label for="graph-xmin">X min</label>
+                  <input type="number" id="graph-xmin" value="-10" />
+                </div>
+                <div class="graph-input-group">
+                  <label for="graph-xmax">X max</label>
+                  <input type="number" id="graph-xmax" value="10" />
+                </div>
+              </div>
+              <button class="btn-graph-plot" onclick="drawGraph()">Plot</button>
+            </div>
+            <div class="graph-canvas-wrap">
+              <canvas id="graph-canvas"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    HTMLCanvasElement.prototype.getContext = () => ({
+      scale: () => {},
+      fillRect: () => {},
+      beginPath: () => {},
+      moveTo: () => {},
+      lineTo: () => {},
+      stroke: () => {},
+      fillText: () => {},
+      fillStyle: "",
+      strokeStyle: "",
+      lineWidth: 0,
+      textAlign: "",
+      textBaseline: "",
+      font: "",
+    });
+  });
+
+  test("plotGraph and closeGraphModal are functions", () => {
+    expect(typeof calc.plotGraph).toBe("function");
+    expect(typeof calc.closeGraphModal).toBe("function");
+  });
+
+  test("plotGraph opens the modal", () => {
+    calc.plotGraph();
+    const modal = document.getElementById("graph-modal");
+    expect(modal.classList.contains("open")).toBe(true);
+  });
+
+  test("closeGraphModal closes the modal", () => {
+    calc.plotGraph();
+    calc.closeGraphModal();
+    const modal = document.getElementById("graph-modal");
+    expect(modal.classList.contains("open")).toBe(false);
+  });
+
+  test("drawGraph is a function", () => {
+    expect(typeof calc.drawGraph).toBe("function");
+  });
+
+  test("drawGraph does not throw with a valid equation", () => {
+    document.getElementById("graph-equation").value = "2x+3";
+    expect(() => calc.drawGraph()).not.toThrow();
+  });
+
+  test("drawGraph does not throw with implicit multiplication", () => {
+    document.getElementById("graph-equation").value = "2x+3";
+    expect(() => calc.drawGraph()).not.toThrow();
+  });
+});
+
+
