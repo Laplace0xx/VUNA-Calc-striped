@@ -21,3 +21,7 @@ npm run lint
 npm test
 npm run serve
 ```
+## Deployed
+<!-- Deployed here: [http://simom.vudse26.cloud/](http://simom.vudse26.cloud/) -->
+
+Deployed [here](http://simom.vudse26.cloud/)
