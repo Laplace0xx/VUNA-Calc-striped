@@ -84,3 +84,12 @@ jobs:
           dangerous-clean-slate: true
           exclude: |
             **/.git*
+            **/.git/**
+            .git/**
+            node_modules/**
+            .github/**
+            coverage/**
+            *.md
+            package*.json
+            jest.config.js
+            eslint.config.js
