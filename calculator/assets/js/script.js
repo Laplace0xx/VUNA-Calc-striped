@@ -3,7 +3,7 @@
 // ===============================
 
 let LAST_RESULT = 0;
-var currentExpression = "";
+let currentExpression = "";
 
 // ------------------------------
 // Theme Toggle Logic
@@ -153,7 +153,7 @@ function calculateExpression(expression) {
     );
 
     // Calculate result
-    let result = eval(normalizedExpression); // eslint-disable-line no-eval
+    const result = eval(normalizedExpression); // eslint-disable-line no-eval
     console.log("Calculated result for expression:", expression, "->", result);
 
     if (isNaN(result) || !isFinite(result)) {
@@ -171,8 +171,8 @@ function calculateResult() {
   }
     const display = document.getElementById("result");
     // Calculate result
-    let result = calculateExpression(currentExpression);
-    result = String(result);
+    const calculatedResult = calculateExpression(currentExpression);
+    const result = String(calculatedResult);
 
     // Save result for future expressions
     LAST_RESULT = result;
