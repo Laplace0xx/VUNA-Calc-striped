@@ -4,8 +4,8 @@
   "private": true,
   "description": "VUNA Calculator - Created by set 2025/26 Software Engineering",
   "scripts": {
-    "lint": "eslint assets/js/",
-    "lint:fix": "eslint assets/js/ --fix",
+    "lint": "eslint calculator/assets/js/",
+    "lint:fix": "eslint calculator/assets/js/ --fix",
     "serve": "python3 -m http.server 8080",
     "validate": "tidy -e index.html 2>&1 || true",
     "test": "jest",

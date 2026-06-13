@@ -2,10 +2,10 @@ import globals from "globals";
 
 export default [
   {
-    ignores: ["assets/js/bootstrap.min.js"],
+    ignores: ["calculator/assets/js/bootstrap.min.js"],
   },
   {
-    files: ["assets/js/*.js"],
+    files: ["calculator/assets/js/*.js"],
     languageOptions: {
       ecmaVersion: 2021,
       sourceType: "script",

@@ -3,7 +3,7 @@ module.exports = {
   collectCoverage: true,
   coverageDirectory: "coverage",
   coverageReporters: ["text", "lcov", "html"],
-  collectCoverageFrom: ["assets/js/script.js"],
+  collectCoverageFrom: ["calculator/assets/js/script.js"],
   coverageThreshold: {
     global: {
       branches: 70,
