@@ -1,0 +1,18 @@
+{
+  "name": "vuna-calc",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Calculator created by Set 2025/26 Software Engineering",
+  "scripts": {
+    "start": "npx serve .",
+    "lint": "eslint calculator/assets/js/**.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint:fix": "eslint calculator/assets/js/**.js --fix"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "jest": "^30.4.2",
+    "jest-environment-jsdom": "^30.4.1"
+  }
+}
